@@ -1,0 +1,305 @@
+/* ══════════════════════════════════════════════════
+   Pawura Network – JavaFX Stylesheet
+   Theme: Forest Green + Warm Amber
+   ══════════════════════════════════════════════════ */
+
+/* ── Root / Global ─────────────────────────────── */
+.root {
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: #f5f7f2;
+    -color-primary:   #2d6a4f;
+    -color-accent:    #e07b25;
+    -color-surface:   #ffffff;
+    -color-sidebar:   #1b4332;
+    -color-text:      #1a1a1a;
+    -color-muted:     #6b7280;
+    -color-error:     #c0392b;
+    -color-border:    #d1d9d0;
+}
+
+/* ── Login Screen ──────────────────────────────── */
+.login-bg {
+    -fx-background-color: linear-gradient(to bottom right, #1b4332, #40916c);
+}
+
+.login-card {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.30), 24, 0, 0, 8);
+}
+
+.login-emoji {
+    -fx-font-size: 52px;
+}
+
+.login-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1b4332;
+}
+
+.login-subtitle {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6b7280;
+}
+
+/* ── Form Fields ───────────────────────────────── */
+.field-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-text-fill: #374151;
+}
+
+.form-field {
+    -fx-background-color: #f9fafb;
+    -fx-border-color: #d1d9d0;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 8 12 8 12;
+    -fx-font-size: 13px;
+}
+
+.form-field:focused {
+    -fx-border-color: #2d6a4f;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(45,106,79,0.25), 6, 0, 0, 0);
+}
+
+/* ── Buttons ───────────────────────────────────── */
+.primary-button {
+    -fx-background-color: #2d6a4f;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 10 24 10 24;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: #40916c;
+    -fx-effect: dropshadow(gaussian, rgba(45,106,79,0.35), 8, 0, 0, 2);
+}
+
+.primary-button:pressed {
+    -fx-background-color: #1b4332;
+}
+
+.primary-button:disabled {
+    -fx-opacity: 0.55;
+}
+
+.secondary-button {
+    -fx-background-color: #e5e7eb;
+    -fx-text-fill: #374151;
+    -fx-font-size: 13px;
+    -fx-padding: 10 20 10 20;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #d1d5db;
+}
+
+.logout-button {
+    -fx-background-color: rgba(255,255,255,0.12);
+    -fx-text-fill: #b7e4c7;
+    -fx-font-size: 12px;
+    -fx-padding: 8 12 8 12;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(183,228,199,0.3);
+    -fx-border-radius: 6;
+}
+
+.logout-button:hover {
+    -fx-background-color: rgba(255,255,255,0.22);
+    -fx-text-fill: white;
+}
+
+/* ── Sidebar ───────────────────────────────────── */
+.sidebar {
+    -fx-background-color: #1b4332;
+    -fx-border-color: transparent #2d6a4f transparent transparent;
+    -fx-border-width: 0 1 0 0;
+}
+
+.sidebar-logo {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 0 12 8 12;
+}
+
+.sidebar-user {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d8f3dc;
+}
+
+.sidebar-role {
+    -fx-font-size: 10px;
+    -fx-text-fill: #74c69d;
+    -fx-background-color: rgba(116,198,157,0.2);
+    -fx-padding: 2 6 2 6;
+    -fx-background-radius: 10;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #b7e4c7;
+    -fx-font-size: 13px;
+    -fx-padding: 10 14 10 14;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.nav-button:hover {
+    -fx-background-color: rgba(255,255,255,0.12);
+    -fx-text-fill: white;
+}
+
+.nav-admin {
+    -fx-text-fill: #ffd166;
+}
+
+.nav-admin:hover {
+    -fx-background-color: rgba(255,209,102,0.15);
+}
+
+/* ── Content Area ──────────────────────────────── */
+.content-area {
+    -fx-background-color: #f0f4f1;
+}
+
+.panel {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 12, 0, 0, 3);
+    -fx-padding: 0;
+}
+
+/* ── Typography ────────────────────────────────── */
+.panel-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1b4332;
+}
+
+.panel-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6b7280;
+}
+
+.section-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #374151;
+    -fx-padding: 8 0 4 0;
+}
+
+.hint-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #9ca3af;
+    -fx-text-alignment: center;
+}
+
+.error-label {
+    -fx-text-fill: #c0392b;
+    -fx-font-size: 12px;
+    -fx-wrap-text: true;
+}
+
+.detail-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: #374151;
+    -fx-line-spacing: 4;
+}
+
+/* ── Stat Cards ────────────────────────────────── */
+.stat-card {
+    -fx-background-color: #f0faf4;
+    -fx-background-radius: 12;
+    -fx-border-color: #b7e4c7;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.stat-emoji {
+    -fx-font-size: 28px;
+}
+
+.stat-value {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2d6a4f;
+}
+
+.stat-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6b7280;
+}
+
+/* ── Table ─────────────────────────────────────── */
+.styled-table {
+    -fx-background-color: transparent;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 8;
+    -fx-table-cell-border-color: #f3f4f6;
+}
+
+.styled-table .column-header {
+    -fx-background-color: #f8faf9;
+    -fx-font-weight: bold;
+    -fx-text-fill: #374151;
+    -fx-padding: 10 8 10 8;
+}
+
+.styled-table .table-row-cell:selected {
+    -fx-background-color: #d8f3dc;
+    -fx-text-fill: #1b4332;
+}
+
+.styled-table .table-row-cell:hover {
+    -fx-background-color: #f0faf4;
+}
+
+/* ── List View ─────────────────────────────────── */
+.styled-list {
+    -fx-background-color: transparent;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 8;
+}
+
+.styled-list .list-cell {
+    -fx-padding: 10 14 10 14;
+    -fx-border-color: transparent transparent #f3f4f6 transparent;
+}
+
+.styled-list .list-cell:selected {
+    -fx-background-color: #d8f3dc;
+    -fx-text-fill: #1b4332;
+}
+
+.styled-list .list-cell:hover {
+    -fx-background-color: #f0faf4;
+}
+
+/* ── Separator ─────────────────────────────────── */
+.separator .line {
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 0.5;
+}
+
+/* ── Scroll Bar ────────────────────────────────── */
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #b7e4c7;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
