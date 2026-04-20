@@ -12,7 +12,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
@@ -36,6 +39,9 @@ public class DashboardView {
     private BorderPane root;
     private StackPane  contentArea;
 
+    private double xOffset = 0;
+    private double yOffset = 0;
+
     public DashboardView(Stage stage, User user, AuthenticationService authService) {
         this.stage       = stage;
         this.user        = user;
@@ -47,12 +53,44 @@ public class DashboardView {
 
     private BorderPane buildUI() {
         BorderPane bp = new BorderPane();
+        bp.getStyleClass().add("root");
+        bp.setTop(createTitleBar());
         bp.setLeft(buildSidebar());
         contentArea = new StackPane();
         contentArea.getStyleClass().add("content-area");
         bp.setCenter(contentArea);
+
+        // Dragging logic for the dashboard
+        bp.getTop().setOnMousePressed(event -> {
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
+        });
+        bp.getTop().setOnMouseDragged(event -> {
+            stage.setX(event.getScreenX() - xOffset);
+            stage.setY(event.getScreenY() - yOffset);
+        });
+
         showOverview();
         return bp;
+    }
+
+    private HBox createTitleBar() {
+        Button minBtn = new Button("—");
+        minBtn.getStyleClass().add("window-control-btn");
+        minBtn.setOnAction(e -> stage.setIconified(true));
+
+        Button sizeBtn = new Button("▢");
+        sizeBtn.getStyleClass().add("window-control-btn");
+        sizeBtn.setOnAction(e -> stage.setMaximized(!stage.isMaximized()));
+
+        Button closeBtn = new Button("✕");
+        closeBtn.getStyleClass().addAll("window-control-btn", "close-btn");
+        closeBtn.setOnAction(e -> stage.close());
+
+        HBox controls = new HBox(minBtn, sizeBtn, closeBtn);
+        controls.setAlignment(Pos.TOP_RIGHT);
+        controls.getStyleClass().add("window-header");
+        return controls;
     }
 
     // ── Sidebar ───────────────────────────────────────────────────────────────
@@ -298,23 +336,68 @@ public class DashboardView {
         Label heading = new Label("News & Updates");
         heading.getStyleClass().add("panel-title");
 
-        ListView<NewsArticle> list = new ListView<>();
-        list.getStyleClass().add("styled-list");
-        list.setCellFactory(lv -> new ListCell<>() {
-            @Override protected void updateItem(NewsArticle item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? null : item.getDisplaySummary());
-            }
-        });
-        list.setItems(FXCollections.observableArrayList(newsService.findAll()));
-        list.setOnMouseClicked(e -> {
-            NewsArticle sel = list.getSelectionModel().getSelectedItem();
-            if (sel != null) showDetail("Article", sel.getDetailText());
-        });
-        VBox.setVgrow(list, Priority.ALWAYS);
+        FlowPane grid = new FlowPane();
+        grid.getStyleClass().add("news-grid");
+        grid.setHgap(24);
+        grid.setVgap(24);
+        grid.setPadding(new Insets(10, 0, 10, 0));
 
-        panel.getChildren().addAll(heading, list);
+        for (NewsArticle article : newsService.findAll()) {
+            grid.getChildren().add(createNewsTile(article));
+        }
+
+        ScrollPane scroll = new ScrollPane(grid);
+        scroll.setFitToWidth(true);
+        scroll.getStyleClass().add("news-scroll");
+        VBox.setVgrow(scroll, Priority.ALWAYS);
+
+        panel.getChildren().addAll(heading, scroll);
         setContent(panel);
+    }
+
+    private VBox createNewsTile(NewsArticle article) {
+        VBox tile = new VBox();
+        tile.getStyleClass().add("news-tile");
+        tile.setPrefWidth(280);
+        tile.setMinWidth(280);
+        tile.setMaxWidth(280);
+
+        // Image Section
+        ImageView iv = new ImageView();
+        iv.setFitWidth(280);
+        iv.setFitHeight(160);
+        iv.setPreserveRatio(false);
+        
+        if (article.getImageUrl() != null && !article.getImageUrl().isEmpty()) {
+            try {
+                iv.setImage(new Image(article.getImageUrl(), true));
+            } catch (Exception ignored) {
+                // Fallback or placeholder logic could go here
+            }
+        }
+
+        // Rounded corners for the image top
+        Rectangle clip = new Rectangle(280, 160);
+        clip.setArcWidth(24);
+        clip.setArcHeight(24);
+        iv.setClip(clip);
+
+        VBox info = new VBox(8);
+        info.setPadding(new Insets(16));
+        
+        Label title = new Label(article.getTitle());
+        title.getStyleClass().add("news-tile-title");
+        title.setWrapText(true);
+        title.setMinHeight(45);
+
+        Label meta = new Label(article.getCategory() + " • " + article.getSource());
+        meta.getStyleClass().add("news-tile-meta");
+
+        info.getChildren().addAll(meta, title);
+        tile.getChildren().addAll(iv, info);
+        tile.setOnMouseClicked(e -> showDetail("Article", article.getDetailText()));
+        
+        return tile;
     }
 
     // ── Admin Panel ───────────────────────────────────────────────────────────
@@ -344,11 +427,8 @@ public class DashboardView {
 
     private void openSightingForm() {
         SightingFormView form = new SightingFormView(stage, user, sightingService,
-            () -> showSightings());
-        Scene scene = new Scene(form.getRoot(), PawuraApp.WINDOW_W, PawuraApp.WINDOW_H);
-        scene.getStylesheets().add(
-            getClass().getResource("/styles.css").toExternalForm());
-        stage.setScene(scene);
+            this::showSightings);
+        setContent(form.getRoot());
     }
 
     private void handleLogout() {
@@ -374,8 +454,9 @@ public class DashboardView {
         TextArea ta = new TextArea(text);
         ta.setEditable(false);
         ta.setWrapText(true);
-        ta.setPrefSize(520, 340);
+        ta.setPrefSize(560, 260);
         alert.getDialogPane().setContent(ta);
+        alert.getDialogPane().setPrefWidth(680);
         alert.showAndWait();
     }
 

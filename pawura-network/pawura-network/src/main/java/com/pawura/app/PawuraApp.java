@@ -5,7 +5,9 @@ import com.pawura.ui.LoginView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  * PawuraApp – the JavaFX Application subclass.
@@ -24,11 +26,13 @@ public class PawuraApp extends Application {
         // Initialise the database (creates tables if they don't exist)
         DatabaseManager.getInstance().initialise();
 
+        primaryStage.initStyle(StageStyle.TRANSPARENT);
+
         // Build Login screen
         LoginView loginView = new LoginView(primaryStage);
         Scene scene = new Scene(loginView.getRoot(), LOGIN_W, LOGIN_H);
-        scene.getStylesheets().add(
-            getClass().getResource("/styles.css").toExternalForm());
+        scene.setFill(Color.TRANSPARENT);
+        scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
 
         primaryStage.setTitle(APP_TITLE);
         primaryStage.setScene(scene);

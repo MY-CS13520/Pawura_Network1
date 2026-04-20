@@ -134,6 +134,7 @@ public class DatabaseManager {
                 {"admin",  hash, "admin@pawura.lk",  "Kasun Perera",    "ADMINISTRATOR", "2024-01-01T00:00"},
                 {"ranger1",hash, "r1@pawura.lk",     "Amaya Silva",     "RANGER",        "2024-01-02T00:00"},
                 {"viewer1",hash, "v1@pawura.lk",     "Nuwan Fernando",  "VIEWER",        "2024-01-03T00:00"},
+                {"demo",   hash, "demo@pawura.lk",    "Demo User",       "VIEWER",        "2024-11-20T00:00"},
             };
             for (Object[] u : users) {
                 for (int i = 0; i < u.length; i++) ps.setObject(i + 1, u[i]);
