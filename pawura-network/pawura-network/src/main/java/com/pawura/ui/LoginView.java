@@ -29,6 +29,9 @@ public class LoginView {
     private final Button        loginButton   = new Button("Sign In");
     private final Label         errorLabel    = new Label();
 
+    private double xOffset = 0;
+    private double yOffset = 0;
+
     public LoginView(Stage stage) {
         this.stage = stage;
         root = buildUI();
@@ -75,7 +78,7 @@ public class LoginView {
         form.setPadding(new Insets(0, 32, 0, 32));
 
         Label hint = new Label(
-            "Demo logins:  admin  |  ranger1  |  viewer1     password: password123");
+            "Demo logins:  admin | ranger1 | viewer1 | demo    password: password123");
         hint.getStyleClass().add("hint-label");
         hint.setWrapText(true);
         hint.setTextAlignment(TextAlignment.CENTER);
@@ -87,11 +90,40 @@ public class LoginView {
         card.setMaxWidth(420);
         card.setPadding(new Insets(44, 8, 32, 8));
 
-        VBox outer = new VBox(card);
-        outer.setAlignment(Pos.CENTER);
+        // Wrapper to center the card while the TitleBar stays at the top
+        VBox cardContainer = new VBox(card);
+        cardContainer.setAlignment(Pos.CENTER);
+        VBox.setVgrow(cardContainer, Priority.ALWAYS);
+
+        VBox outer = new VBox(createTitleBar(), cardContainer);
         outer.getStyleClass().add("login-bg");
-        VBox.setVgrow(outer, Priority.ALWAYS);
+
+        // Enable dragging of the entire window
+        outer.setOnMousePressed(event -> {
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
+        });
+        outer.setOnMouseDragged(event -> {
+            stage.setX(event.getScreenX() - xOffset);
+            stage.setY(event.getScreenY() - yOffset);
+        });
+
         return outer;
+    }
+
+    private HBox createTitleBar() {
+        Button minBtn = new Button("—");
+        minBtn.getStyleClass().add("window-control-btn");
+        minBtn.setOnAction(e -> stage.setIconified(true));
+
+        Button closeBtn = new Button("✕");
+        closeBtn.getStyleClass().addAll("window-control-btn", "close-btn");
+        closeBtn.setOnAction(e -> stage.close());
+
+        HBox controls = new HBox(minBtn, closeBtn);
+        controls.setAlignment(Pos.TOP_RIGHT);
+        controls.getStyleClass().add("window-header");
+        return controls;
     }
 
     private void handleLogin() {

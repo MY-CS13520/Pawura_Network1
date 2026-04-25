@@ -5,9 +5,12 @@
 
 /* ── Root / Global ─────────────────────────────── */
 .root {
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-size: 13px;
     -fx-font-size: 13px;
-    -fx-background-color: #f5f7f2;
+    background-color: rgba(245, 247, 242, 0.8);
+    -fx-background-color: rgba(245, 247, 242, 0.8);
     -color-primary:   #2d6a4f;
     -color-accent:    #e07b25;
     -color-surface:   #ffffff;
@@ -18,62 +21,118 @@
     -color-border:    #d1d9d0;
 }
 
+/* ── Window Controls ───────────────────────────── */
+.window-header {
+    background-color: rgba(255, 255, 255, 0.12);
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    border-color: transparent transparent rgba(255, 255, 255, 0.05) transparent;
+    -fx-border-color: transparent transparent rgba(255, 255, 255, 0.05) transparent;
+    -fx-border-width: 0 0 1 0;
+    padding: 0 8px;
+    -fx-padding: 0 8 0 8;
+}
+
+.window-control-btn {
+    background-color: transparent;
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    font-size: 16px;
+    -fx-font-size: 16px;
+    cursor: pointer;
+    -fx-cursor: hand;
+    padding: 10px 12px 6px 12px;
+    -fx-padding: 10 12 6 12;
+}
+
+.window-control-btn:hover {
+    /* Higher opacity white overlay creates a noticeable "whiter shade" of the background color */
+    background-color: rgba(255, 255, 255, 0.4);
+    -fx-background-color: rgba(255, 255, 255, 0.4);
+    -fx-transition: background-color 0.2s;
+}
+
+.close-btn:hover {
+    -fx-background-color: #c0392b;
+    -fx-text-fill: white;
+}
+
 /* ── Login Screen ──────────────────────────────── */
 .login-bg {
+    background-color: #1b4332;
     -fx-background-color: linear-gradient(to bottom right, #1b4332, #40916c);
 }
 
 .login-card {
+    background-color: white;
     -fx-background-color: white;
     -fx-background-radius: 16;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.30), 24, 0, 0, 8);
 }
 
 .login-emoji {
+    font-size: 52px;
     -fx-font-size: 52px;
 }
 
 .login-title {
+    font-weight: bold;
+    font-size: 26px;
     -fx-font-size: 26px;
     -fx-font-weight: bold;
     -fx-text-fill: #1b4332;
 }
 
 .login-subtitle {
+    font-size: 12px;
     -fx-font-size: 12px;
     -fx-text-fill: #6b7280;
 }
 
 /* ── Form Fields ───────────────────────────────── */
 .field-label {
+    font-weight: bold;
     -fx-font-weight: bold;
+    font-size: 12px;
     -fx-font-size: 12px;
     -fx-text-fill: #374151;
 }
 
 .form-field {
+    background-color: #f9fafb;
     -fx-background-color: #f9fafb;
+    border-color: #d1d9d0;
     -fx-border-color: #d1d9d0;
+    border-radius: 6;
     -fx-border-radius: 6;
     -fx-background-radius: 6;
+    padding: 8px 12px;
     -fx-padding: 8 12 8 12;
+    font-size: 13px;
     -fx-font-size: 13px;
 }
 
 .form-field:focused {
+    border-color: #2d6a4f;
     -fx-border-color: #2d6a4f;
+    background-color: white;
     -fx-background-color: white;
     -fx-effect: dropshadow(gaussian, rgba(45,106,79,0.25), 6, 0, 0, 0);
 }
 
 /* ── Buttons ───────────────────────────────────── */
 .primary-button {
+    background-color: #2d6a4f;
     -fx-background-color: #2d6a4f;
     -fx-text-fill: white;
+    font-weight: bold;
     -fx-font-weight: bold;
+    font-size: 13px;
     -fx-font-size: 13px;
+    padding: 10px 24px;
     -fx-padding: 10 24 10 24;
+    border-radius: 8;
     -fx-background-radius: 8;
+    cursor: pointer;
     -fx-cursor: hand;
 }
 
@@ -91,11 +150,16 @@
 }
 
 .secondary-button {
+    background-color: #e5e7eb;
     -fx-background-color: #e5e7eb;
     -fx-text-fill: #374151;
+    font-size: 13px;
     -fx-font-size: 13px;
+    padding: 10px 20px;
     -fx-padding: 10 20 10 20;
+    border-radius: 8;
     -fx-background-radius: 8;
+    cursor: pointer;
     -fx-cursor: hand;
 }
 
@@ -104,11 +168,16 @@
 }
 
 .logout-button {
+    background-color: rgba(255,255,255,0.12);
     -fx-background-color: rgba(255,255,255,0.12);
     -fx-text-fill: #b7e4c7;
+    font-size: 12px;
     -fx-font-size: 12px;
+    padding: 8px 12px;
     -fx-padding: 8 12 8 12;
+    border-radius: 6;
     -fx-background-radius: 6;
+    cursor: pointer;
     -fx-cursor: hand;
     -fx-border-color: rgba(183,228,199,0.3);
     -fx-border-radius: 6;
@@ -121,43 +190,60 @@
 
 /* ── Sidebar ───────────────────────────────────── */
 .sidebar {
+    background-color: #1b4332;
     -fx-background-color: #1b4332;
+    border-color: transparent #2d6a4f transparent transparent;
     -fx-border-color: transparent #2d6a4f transparent transparent;
     -fx-border-width: 0 1 0 0;
 }
 
 .sidebar-logo {
+    font-size: 20px;
     -fx-font-size: 20px;
+    font-weight: bold;
     -fx-font-weight: bold;
     -fx-text-fill: white;
+    padding: 0 12px 8px 12px;
     -fx-padding: 0 12 8 12;
 }
 
 .sidebar-user {
+    font-size: 13px;
     -fx-font-size: 13px;
+    font-weight: bold;
     -fx-font-weight: bold;
     -fx-text-fill: #d8f3dc;
 }
 
 .sidebar-role {
+    font-size: 10px;
     -fx-font-size: 10px;
     -fx-text-fill: #74c69d;
+    background-color: rgba(116,198,157,0.2);
     -fx-background-color: rgba(116,198,157,0.2);
+    padding: 2px 6px;
     -fx-padding: 2 6 2 6;
+    border-radius: 10;
     -fx-background-radius: 10;
 }
 
 .nav-button {
+    background-color: transparent;
     -fx-background-color: transparent;
     -fx-text-fill: #b7e4c7;
+    font-size: 13px;
     -fx-font-size: 13px;
+    padding: 10px 14px;
     -fx-padding: 10 14 10 14;
+    border-radius: 8;
     -fx-background-radius: 8;
+    cursor: pointer;
     -fx-cursor: hand;
     -fx-alignment: CENTER_LEFT;
 }
 
 .nav-button:hover {
+    background-color: rgba(255,255,255,0.12);
     -fx-background-color: rgba(255,255,255,0.12);
     -fx-text-fill: white;
 }
@@ -172,11 +258,16 @@
 
 /* ── Content Area ──────────────────────────────── */
 .content-area {
+    background-color: #f0f4f1;
     -fx-background-color: #f0f4f1;
 }
 
 .panel {
+    background-color: white;
     -fx-background-color: white;
+    background-color: rgba(255, 255, 255, 0.7);
+    -fx-background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 12;
     -fx-background-radius: 12;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 12, 0, 0, 3);
     -fx-padding: 0;
@@ -184,24 +275,31 @@
 
 /* ── Typography ────────────────────────────────── */
 .panel-title {
+    font-size: 22px;
     -fx-font-size: 22px;
+    font-weight: bold;
     -fx-font-weight: bold;
     -fx-text-fill: #1b4332;
 }
 
 .panel-subtitle {
+    font-size: 14px;
     -fx-font-size: 14px;
     -fx-text-fill: #6b7280;
 }
 
 .section-title {
+    font-size: 15px;
     -fx-font-size: 15px;
+    font-weight: bold;
     -fx-font-weight: bold;
     -fx-text-fill: #374151;
+    padding: 8px 0 4px 0;
     -fx-padding: 8 0 4 0;
 }
 
 .hint-label {
+    font-size: 11px;
     -fx-font-size: 11px;
     -fx-text-fill: #9ca3af;
     -fx-text-alignment: center;
@@ -209,11 +307,13 @@
 
 .error-label {
     -fx-text-fill: #c0392b;
+    font-size: 12px;
     -fx-font-size: 12px;
     -fx-wrap-text: true;
 }
 
 .detail-text {
+    font-size: 13px;
     -fx-font-size: 13px;
     -fx-text-fill: #374151;
     -fx-line-spacing: 4;
@@ -221,82 +321,142 @@
 
 /* ── Stat Cards ────────────────────────────────── */
 .stat-card {
+    background-color: #f0faf4;
     -fx-background-color: #f0faf4;
+    border-radius: 12;
     -fx-background-radius: 12;
+    border-color: #b7e4c7;
     -fx-border-color: #b7e4c7;
     -fx-border-radius: 12;
     -fx-border-width: 1;
 }
 
 .stat-emoji {
+    font-size: 28px;
     -fx-font-size: 28px;
 }
 
 .stat-value {
+    font-size: 32px;
     -fx-font-size: 32px;
+    font-weight: bold;
     -fx-font-weight: bold;
     -fx-text-fill: #2d6a4f;
 }
 
 .stat-label {
+    font-size: 12px;
     -fx-font-size: 12px;
     -fx-text-fill: #6b7280;
 }
 
 /* ── Table ─────────────────────────────────────── */
 .styled-table {
+    background-color: transparent;
     -fx-background-color: transparent;
+    border-color: #e5e7eb;
     -fx-border-color: #e5e7eb;
     -fx-border-radius: 8;
     -fx-table-cell-border-color: #f3f4f6;
 }
 
 .styled-table .column-header {
+    background-color: #f8faf9;
     -fx-background-color: #f8faf9;
+    font-weight: bold;
     -fx-font-weight: bold;
     -fx-text-fill: #374151;
+    padding: 10px 8px;
     -fx-padding: 10 8 10 8;
 }
 
 .styled-table .table-row-cell:selected {
+    background-color: #d8f3dc;
     -fx-background-color: #d8f3dc;
     -fx-text-fill: #1b4332;
 }
 
 .styled-table .table-row-cell:hover {
+    background-color: #f0faf4;
     -fx-background-color: #f0faf4;
+}
+
+/* ── News Tiles ────────────────────────────────── */
+.news-scroll {
+    background-color: transparent;
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.news-tile {
+    background-color: white;
+    -fx-background-color: white;
+    border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 4);
+    cursor: hand;
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+.news-tile:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 8);
+    -fx-translate-y: -4;
+}
+
+.news-tile-title {
+    font-size: 14px;
+    -fx-font-size: 14px;
+    font-weight: bold;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1b4332;
+}
+
+.news-tile-meta {
+    font-size: 11px;
+    -fx-font-size: 11px;
+    -fx-text-fill: #e07b25; /* color-accent */
+    -fx-font-weight: bold;
 }
 
 /* ── List View ─────────────────────────────────── */
 .styled-list {
+    background-color: transparent;
     -fx-background-color: transparent;
+    border-color: #e5e7eb;
     -fx-border-color: #e5e7eb;
     -fx-border-radius: 8;
 }
 
 .styled-list .list-cell {
     -fx-padding: 10 14 10 14;
+    border-color: transparent transparent #f3f4f6 transparent;
     -fx-border-color: transparent transparent #f3f4f6 transparent;
 }
 
 .styled-list .list-cell:selected {
+    background-color: #d8f3dc;
     -fx-background-color: #d8f3dc;
     -fx-text-fill: #1b4332;
 }
 
 .styled-list .list-cell:hover {
+    background-color: #f0faf4;
     -fx-background-color: #f0faf4;
 }
 
 /* ── Separator ─────────────────────────────────── */
 .separator .line {
+    border-color: #e5e7eb;
     -fx-border-color: #e5e7eb;
+    border-width: 0.5px;
     -fx-border-width: 0.5;
 }
 
 /* ── Scroll Bar ────────────────────────────────── */
 .scroll-bar:vertical .thumb {
     -fx-background-color: #b7e4c7;
+    border-radius: 4;
     -fx-background-radius: 4;
 }
 
