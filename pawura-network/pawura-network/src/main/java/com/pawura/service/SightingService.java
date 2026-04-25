@@ -7,7 +7,6 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 /**
@@ -29,12 +28,12 @@ public class SightingService {
                 Statement.RETURN_GENERATED_KEYS)) {
             ps.setObject(1, s.getLocation()    != null ? s.getLocation().getId()    : null);
             ps.setObject(2, s.getReportedBy()  != null ? s.getReportedBy().getId()  : null);
-            ps.setString(3, s.getSightedAt().toString());
+            ps.setTimestamp(3, Timestamp.valueOf(s.getSightedAt()));
             ps.setInt   (4, s.getElephantCount());
             ps.setString(5, s.getHerdSize()   != null ? s.getHerdSize().name()   : null);
             ps.setString(6, s.getBehaviour()  != null ? s.getBehaviour().name()  : null);
             ps.setString(7, s.getNotes());
-            ps.setInt   (8, s.isVerified() ? 1 : 0);
+            ps.setBoolean(8, s.isVerified());
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) s.setId(keys.getInt(1));
@@ -97,14 +96,15 @@ public class SightingService {
         s.setId(rs.getInt("id"));
         s.setLocation(loc);
         s.setReportedBy(reporter);
-        s.setSightedAt(LocalDateTime.parse(rs.getString("sighted_at")));
+        Timestamp sighted = rs.getTimestamp("sighted_at");
+        if (sighted != null) s.setSightedAt(sighted.toLocalDateTime());
         s.setElephantCount(rs.getInt("elephant_count"));
         String hs = rs.getString("herd_size");
         if (hs != null) s.setHerdSize(ElephantSighting.HerdSize.valueOf(hs));
         String bh = rs.getString("behaviour");
         if (bh != null) s.setBehaviour(ElephantSighting.Behaviour.valueOf(bh));
         s.setNotes(rs.getString("notes"));
-        s.setVerified(rs.getInt("verified") == 1);
+        s.setVerified(rs.getBoolean("verified"));
         return s;
     }
 

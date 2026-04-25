@@ -70,9 +70,8 @@ public class PredictionService extends AbstractPredictionModel {
                 Statement.RETURN_GENERATED_KEYS)) {
             ps.setObject(1, p.getPredictedLocation() != null
                             ? p.getPredictedLocation().getId() : null);
-            ps.setString(2, p.getPredictedAt().toString());
-            ps.setString(3, p.getExpectedArrival() != null
-                            ? p.getExpectedArrival().toString() : null);
+            ps.setTimestamp(2, Timestamp.valueOf(p.getPredictedAt()));
+            ps.setTimestamp(3, p.getExpectedArrival() != null ? Timestamp.valueOf(p.getExpectedArrival()) : null);
             ps.setDouble(4, p.getConfidenceScore());
             ps.setString(5, p.getAlgorithm());
             ps.setString(6, p.getNotes());
@@ -104,10 +103,10 @@ public class PredictionService extends AbstractPredictionModel {
                 try { loc.setLatitude(rs.getDouble("latitude")); }  catch (Exception ignored) {}
                 try { loc.setLongitude(rs.getDouble("longitude")); } catch (Exception ignored) {}
                 p.setPredictedLocation(loc);
-                String pa = rs.getString("predicted_at");
-                if (pa != null) p.setPredictedAt(LocalDateTime.parse(pa));
-                String ea = rs.getString("expected_arrival");
-                if (ea != null) p.setExpectedArrival(LocalDateTime.parse(ea));
+                Timestamp pa = rs.getTimestamp("predicted_at");
+                if (pa != null) p.setPredictedAt(pa.toLocalDateTime());
+                Timestamp ea = rs.getTimestamp("expected_arrival");
+                if (ea != null) p.setExpectedArrival(ea.toLocalDateTime());
                 p.setConfidenceScore(rs.getDouble("confidence_score"));
                 p.setAlgorithm(rs.getString("algorithm"));
                 p.setNotes(rs.getString("notes"));

@@ -71,11 +71,19 @@ public class LoginView {
         loginButton.setMaxWidth(Double.MAX_VALUE);
         loginButton.setOnAction(e -> handleLogin());
         passwordField.setOnAction(e -> handleLogin());
-        usernameField.setOnAction(e -> passwordField.requestFocus());
+        usernameField.setOnAction(e -> passwordField.requestFocus()); // Move focus to password field
+
+        Button signUpButton = new Button("Don't have an account? Sign Up");
+        signUpButton.getStyleClass().add("secondary-button");
+        signUpButton.setMaxWidth(Double.MAX_VALUE);
+        signUpButton.setOnAction(e -> showSignUpView());
+        signUpButton.setPadding(new Insets(10, 0, 10, 0)); // Add some padding for better look
 
         VBox form = new VBox(8, userLbl, usernameField, passLbl, passwordField,
-                             errorLabel, loginButton);
+                             errorLabel, loginButton, signUpButton); // Add sign-up button
         form.setPadding(new Insets(0, 32, 0, 32));
+        form.setAlignment(Pos.CENTER);
+        VBox.setMargin(signUpButton, new Insets(10, 0, 0, 0)); // Margin above sign-up button
 
         Label hint = new Label(
             "Demo logins:  admin | ranger1 | viewer1 | demo    password: password123");
@@ -155,5 +163,15 @@ public class LoginView {
         }
     }
 
+    /**
+     * Switches the view to the SignUpView.
+     */
+    private void showSignUpView() {
+        SignUpView signUpView = new SignUpView(stage);
+        Scene scene = new Scene(signUpView.getRoot(), PawuraApp.LOGIN_W, PawuraApp.LOGIN_H);
+        scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+        stage.setScene(scene);
+        stage.centerOnScreen();
+    }
     public Parent getRoot() { return root; }
 }

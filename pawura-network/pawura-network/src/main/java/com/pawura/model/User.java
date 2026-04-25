@@ -18,6 +18,9 @@ public class User {
     private String        fullName;
     private Role          role;
     private LocalDateTime createdAt;
+    private boolean       isVerified;
+    private String        otpCode;
+    private LocalDateTime otpExpiry;
     private boolean       active;
 
     // ── Constructors ──────────────────────────────────────────────────────────
@@ -53,7 +56,7 @@ public class User {
 
     public String getEmail()                  { return email; }
     public void setEmail(String email) {
-        if (email != null && !email.contains("@"))
+        if (email == null || !email.contains("@"))
             throw new IllegalArgumentException("Invalid email address.");
         this.email = email;
     }
@@ -66,6 +69,15 @@ public class User {
 
     public LocalDateTime getCreatedAt()       { return createdAt; }
     public void setCreatedAt(LocalDateTime d) { this.createdAt = d; }
+
+    public boolean isVerified()               { return isVerified; }
+    public void setVerified(boolean verified) { this.isVerified = verified; }
+
+    public String getOtpCode()                { return otpCode; }
+    public void setOtpCode(String otpCode)    { this.otpCode = otpCode; }
+
+    public LocalDateTime getOtpExpiry()       { return otpExpiry; }
+    public void setOtpExpiry(LocalDateTime d) { this.otpExpiry = d; }
 
     public boolean isActive()                 { return active; }
     public void setActive(boolean active)     { this.active = active; }
