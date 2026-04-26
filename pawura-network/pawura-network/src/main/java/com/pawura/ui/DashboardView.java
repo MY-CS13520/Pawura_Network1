@@ -1,25 +1,45 @@
 package com.pawura.ui;
 
+import java.util.List;
+
 import com.pawura.app.PawuraApp;
-import com.pawura.model.*;
+import com.pawura.model.ElephantSighting;
+import com.pawura.model.Location;
+import com.pawura.model.NewsArticle;
+import com.pawura.model.Prediction;
+import com.pawura.model.User;
 import com.pawura.service.AuthenticationService;
 import com.pawura.service.NewsService;
 import com.pawura.service.PredictionService;
 import com.pawura.service.SightingService;
+
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.TextAlignment;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
-
-import java.util.List;
 
 /**
  * DashboardView – main window after login.
@@ -59,6 +79,19 @@ public class DashboardView {
         contentArea = new StackPane();
         contentArea.getStyleClass().add("content-area");
         bp.setCenter(contentArea);
+
+        stage.maximizedProperty().addListener((obs, wasMax, isMax) -> {
+        if (isMax) {
+            Screen screen = Screen.getPrimary();
+            Rectangle2D bounds = screen.getVisualBounds();
+            stage.setWidth(bounds.getWidth());
+            stage.setHeight(bounds.getHeight());
+        }
+    });
+        bp.prefWidthProperty().bind(stage.widthProperty());
+        bp.prefHeightProperty().bind(stage.heightProperty());
+        contentArea.prefWidthProperty().bind(stage.widthProperty());
+        contentArea.prefHeightProperty().bind(stage.heightProperty());
 
         // Dragging logic for the dashboard
         bp.getTop().setOnMousePressed(event -> {
@@ -171,12 +204,12 @@ public class DashboardView {
             (user.getFullName() != null ? user.getFullName() : user.getUsername()) + "!");
         welcome.getStyleClass().add("panel-subtitle");
 
-        HBox stats = new HBox(20,
+        HBox stats = new HBox(200    /*padding inline of cards*/,
             statCard("🐘", String.valueOf(sightingCount), "Total Sightings"),
             statCard("📍", String.valueOf(predCount),     "Predictions"),
             statCard("📰", String.valueOf(newsCount),     "News Articles")
         );
-        stats.setAlignment(Pos.CENTER_LEFT);
+        stats.setAlignment(Pos.CENTER);
 
         Label recentTitle = new Label("Recent Sightings");
         recentTitle.getStyleClass().add("section-title");
