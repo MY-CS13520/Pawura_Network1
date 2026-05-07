@@ -61,6 +61,13 @@
     </dependencies>
 
     <build>
+        <sourceDirectory>pawura-network/src/main/java</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>pawura-network/src/main/resources</directory>
+            </resource>
+        </resources>
+
         <plugins>
             <!-- JavaFX Maven Plugin -->
             <plugin>

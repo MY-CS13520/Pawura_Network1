@@ -5,7 +5,7 @@
 
 /* ── Root / Global ─────────────────────────────── */
 .root {
-    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-family: "Segoe UI";
     -fx-font-size: 13px;
     -fx-background-color: transparent;
 
@@ -60,7 +60,7 @@
    LOGIN SCREEN
    ══════════════════════════════════════════════════ */
 .login-bg {
-    -fx-background-color: linear-gradient(to bottom right, #1b4332, #40916c);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #1b4332, #40916c);
 }
 
 .login-card {
@@ -116,7 +116,7 @@
    BUTTONS
    ══════════════════════════════════════════════════ */
 .primary-button {
-    -fx-background-color: linear-gradient(to bottom, #369660, #2d6a4f);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #369660, #2d6a4f);
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-font-size: 13px;
@@ -127,7 +127,7 @@
 }
 
 .primary-button:hover {
-    -fx-background-color: linear-gradient(to bottom, #40a870, #369660);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #40a870, #369660);
     -fx-effect: dropshadow(gaussian, rgba(45,106,79,0.45), 10, 0, 0, 3);
 }
 
@@ -175,7 +175,7 @@
    SIDEBAR
    ══════════════════════════════════════════════════ */
 .sidebar {
-    -fx-background-color: linear-gradient(to bottom, #1e4d38, #163829);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #1e4d38, #163829);
     -fx-border-color: transparent rgba(64,145,108,0.40) transparent transparent;
     -fx-border-width: 0 1 0 0;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.30), 16, 0, 4, 0);
@@ -186,7 +186,6 @@
     -fx-font-weight: bold;
     -fx-text-fill: #d8f3dc;
     -fx-padding: 0 12 10 12;
-    -fx-letter-spacing: 0.5;
 }
 
 .sidebar-user {
@@ -232,7 +231,7 @@
    ══════════════════════════════════════════════════ */
 .content-area {
     -fx-background-color: rgba(232, 240, 234, 0.55);
-    -fx-background-image: url("file:/D:/projects/Pawura/Pawura_Network1/pawura-network/pawura-network/src/main/resources/images/content_background.jpg");
+    -fx-background-image: url("images/content_background.jpg");
     -fx-background-size: cover;
 }
 

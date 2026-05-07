@@ -1,5 +1,6 @@
 package com.pawura.ui;
 
+import com.pawura.AdminDashboardView;
 import java.util.List;
 
 import com.pawura.app.PawuraApp;
@@ -298,7 +299,7 @@ public class DashboardView {
                 d.getValue().isVerified() ? "✔" : "⏳"));
         verCol.setMaxWidth(80);
 
-        tv.getColumns().addAll(locCol, countCol, behCol, dateCol, verCol);
+        tv.getColumns().addAll(List.of(locCol, countCol, behCol, dateCol, verCol));
         tv.setItems(FXCollections.observableArrayList(sightingService.findAll()));
 
         // Detail on click
@@ -436,24 +437,7 @@ public class DashboardView {
     // ── Admin Panel ───────────────────────────────────────────────────────────
 
     private void showAdmin() {
-        VBox panel = new VBox(16);
-        panel.setPadding(new Insets(32));
-        panel.getStyleClass().add("panel");
-
-        Label heading = new Label("⚙ Admin Panel");
-        heading.getStyleClass().add("panel-title");
-
-        Label info = new Label(
-            "Logged in as: " + user.getUsername() +
-            "\nRole: "        + user.getRole() +
-            "\nEmail: "       + (user.getEmail() != null ? user.getEmail() : "—"));
-        info.getStyleClass().add("detail-text");
-
-        Label dbLabel = new Label("Database: pawura.db (SQLite)");
-        dbLabel.getStyleClass().add("panel-subtitle");
-
-        panel.getChildren().addAll(heading, info, new Separator(), dbLabel);
-        setContent(panel);
+        setContent(new AdminDashboardView());
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
