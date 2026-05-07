@@ -205,7 +205,7 @@ public class DashboardView {
             (user.getFullName() != null ? user.getFullName() : user.getUsername()) + "!");
         welcome.getStyleClass().add("panel-subtitle");
 
-        HBox stats = new HBox(200    /*padding inline of cards*/,
+        HBox stats = new HBox(25,
             statCard("🐘", String.valueOf(sightingCount), "Total Sightings"),
             statCard("📍", String.valueOf(predCount),     "Predictions"),
             statCard("📰", String.valueOf(newsCount),     "News Articles")
@@ -268,7 +268,7 @@ public class DashboardView {
     private TableView<ElephantSighting> buildSightingsTable() {
         TableView<ElephantSighting> tv = new TableView<>();
         tv.getStyleClass().add("styled-table");
-        tv.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tv.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
 
         TableColumn<ElephantSighting, String> locCol = new TableColumn<>("Location");
         locCol.setCellValueFactory(d ->
@@ -443,7 +443,7 @@ public class DashboardView {
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     private void openSightingForm() {
-        SightingFormView form = new SightingFormView(stage, user, sightingService,
+        SightingFormView form = new SightingFormView(user, sightingService,
             this::showSightings);
         setContent(form.getRoot());
     }

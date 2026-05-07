@@ -208,7 +208,7 @@ public class AuthenticationService {
         Timestamp expiryTs = rs.getTimestamp("otp_expiry");
         Timestamp createdTs = rs.getTimestamp("created_at");
 
-        User.Role role = User.Role.valueOf(roleStr);
+        User.Role role = User.Role.valueOf(roleStr.trim().toUpperCase());
         User user = (role == User.Role.ADMINISTRATOR) ? new Administrator() : new User();
         user.setId(id);
         user.setUsername(username);

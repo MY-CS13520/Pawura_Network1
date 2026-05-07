@@ -3,8 +3,8 @@ package com.pawura;
 import com.pawura.core.AbstractDataStore;
 import com.pawura.model.Administrator;
 import com.pawura.model.User;
-import java.sql.*;
 import java.util.ArrayList;
+import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,14 +51,15 @@ public class UserStore extends AbstractDataStore<User, Integer> {
     }
 
     public long countActiveUsers() {
-        try (ResultSet rs = getConnection().createStatement().executeQuery("SELECT COUNT(*) FROM users WHERE active = 1")) {
+        try (Statement st = getConnection().createStatement();
+             ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM users WHERE active = 1")) {
             if (rs.next()) return rs.getLong(1);
         } catch (SQLException ignored) {}
         return 0;
     }
 
     private User mapRow(ResultSet rs) throws SQLException {
-        User.Role role = User.Role.valueOf(rs.getString("role"));
+        User.Role role = User.Role.valueOf(rs.getString("role").trim().toUpperCase());
         User user = (role == User.Role.ADMINISTRATOR) ? new Administrator() : new User();
         user.setId(rs.getInt("id"));
         user.setUsername(rs.getString("username"));

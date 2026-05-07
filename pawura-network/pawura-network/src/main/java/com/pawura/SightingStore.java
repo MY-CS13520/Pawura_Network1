@@ -35,14 +35,18 @@ public class SightingStore extends AbstractDataStore<Sighting, Integer> {
     @Override
     public List<Sighting> findAll() {
         List<Sighting> list = new ArrayList<>();
-        try (ResultSet rs = getConnection().createStatement().executeQuery("SELECT * FROM sightings ORDER BY sighted_at DESC")) {
+        String sql = "SELECT * FROM sightings ORDER BY sighted_at DESC";
+        try (Statement st = getConnection().createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
             while (rs.next()) list.add(mapRow(rs));
         } catch (SQLException e) { log.severe(e.getMessage()); }
         return list;
     }
 
     public long countUnverified() {
-        try (ResultSet rs = getConnection().createStatement().executeQuery("SELECT COUNT(*) FROM sightings WHERE verified = 0")) {
+        String sql = "SELECT COUNT(*) FROM sightings WHERE verified = 0";
+        try (Statement st = getConnection().createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
             if (rs.next()) return rs.getLong(1);
         } catch (SQLException ignored) {}
         return 0;

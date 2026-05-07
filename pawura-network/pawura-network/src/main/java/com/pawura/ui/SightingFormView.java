@@ -22,7 +22,6 @@ import java.util.List;
  */
 public class SightingFormView {
 
-    private final javafx.stage.Stage  stage;
     private final User                currentUser;
     private final SightingService     sightingService;
     private final Runnable            onSaved;
@@ -37,9 +36,7 @@ public class SightingFormView {
     private TextArea            notesArea;
     private Label               errorLabel;
 
-    public SightingFormView(javafx.stage.Stage stage, User user,
-                            SightingService service, Runnable onSaved) {
-        this.stage          = stage;
+    public SightingFormView(User user, SightingService service, Runnable onSaved) {
         this.currentUser    = user;
         this.sightingService = service;
         this.onSaved        = onSaved;

