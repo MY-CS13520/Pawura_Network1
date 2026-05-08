@@ -6,11 +6,8 @@
 /* ── Root / Global ─────────────────────────────── */
 .root {
     -fx-font-family: "Segoe UI";
-    font-family: "Segoe UI";
     -fx-font-size: 13px;
-    font-size: 13px;
     -fx-background-color: transparent;
-    background-color: transparent;
 
     /* Palette tokens */
     -color-primary:      #2d6a4f;
@@ -35,25 +32,17 @@
    ══════════════════════════════════════════════════ */
 .window-header {
     -fx-background-color: rgba(27, 67, 50, 0.92);
-    background-color: rgba(27, 67, 50, 0.92);
     -fx-border-color: transparent transparent rgba(255,255,255,0.08) transparent;
-    border-color: transparent transparent rgba(255,255,255,0.08) transparent;
     -fx-border-width: 0 0 1 0;
-    border-width: 0 0 1 0;
     -fx-padding: 0 6 0 6;
-    padding: 0 6 0 6;
 }
 
 .window-control-btn {
     -fx-background-color: transparent;
-    background-color: transparent;
     -fx-text-fill: rgba(255,255,255,0.75);
     -fx-font-size: 14px;
-    font-size: 14px;
     -fx-cursor: hand;
-    cursor: hand;
     -fx-padding: 8 14 8 14;
-    padding: 8 14 8 14;
     -fx-background-radius: 4;
 }
 
@@ -302,12 +291,14 @@
     -fx-border-color: rgba(183,228,199,0.70);
     -fx-border-radius: 16;
     -fx-border-width: 1;
-    -fx-effect: dropshadow(gaussian, rgba(45,106,79,0.14), 14, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4); /* Slightly lighter than sighting-card */
     -fx-padding: 20 60 20 60;
 }
 
 .stat-card:hover{
     -fx-background-color: rgba(183,228,199,0.40);
+    -fx-border-color: -color-primary;
+    -fx-effect: dropshadow(gaussian, rgba(45, 106, 79, 0.35), 18, 0, 0, 0);
 }
 
 .stat-emoji {
@@ -381,20 +372,51 @@
 }
 
 .news-tile {
-    -fx-background-color: rgba(255,255,255,0.88);
+    -fx-background-color: rgba(255, 255, 255, 0.45); /* Frosted glass transparency */
     -fx-background-radius: 14;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 12, 0, 0, 4);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 15, 0, 0, 5);
     -fx-cursor: hand;
-    -fx-border-color: rgba(209,217,208,0.60);
+    -fx-border-color: rgba(255, 255, 255, 0.35); /* Glass highlight edge */
     -fx-border-radius: 14;
-    -fx-border-width: 1;
+    -fx-border-width: 1.5;
 }
 
 .news-tile:hover {
-    -fx-background-color: rgba(255,255,255,0.98);
+    -fx-background-color: rgba(255, 255, 255, 0.65);
     -fx-effect: dropshadow(gaussian, rgba(45,106,79,0.22), 18, 0, 0, 8);
     -fx-border-color: rgba(64,145,108,0.40);
     -fx-translate-y: -3;
+}
+
+/* Notification System */
+.notification-bar {
+    -fx-background-color: rgba(224, 123, 37, 0.12);
+    -fx-border-color: -color-accent;
+    -fx-border-width: 0 0 0 4; /* Left accent border */
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 12 16;
+}
+
+.notification-text {
+    -fx-text-fill: #1b4332;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.sighting-card {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.22), 18, 0, 0, 6);
+}
+
+.sighting-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(45,106,79,0.35), 24, 0, 0, 10);
+}
+
+.danger-tag {
+    -fx-background-color: #c0392b;
+    -fx-text-fill: white;
+    -fx-padding: 2 8 2 8;
+    -fx-background-radius: 4;
 }
 
 .news-tile-title {
@@ -512,4 +534,20 @@
 
 .dialog-pane .button-bar .button:hover {
     -fx-background-color: #40916c;
+}
+
+/* ══════════════════════════════════════════════════
+   PREMIUM SHIMMER EFFECT
+   ══════════════════════════════════════════════════ */
+.glint-line {
+    -fx-background-color: linear-gradient(to right, /* Sharpened and brighter glint */
+        rgba(255, 255, 255, 0.0) 0%,
+        rgba(255, 255, 255, 0.15) 48%, /* Start of the bright part */
+        rgba(255, 255, 255, 1.0) 50%,  /* Peak brightness */
+        rgba(255, 255, 255, 0.15) 52%, /* End of the bright part */
+        rgba(255, 255, 255, 0.0) 100%);
+    -fx-pref-width: 180px; /* Make the glint line narrower for a more distinct sweep */
+    -fx-pref-height: 1000px; /* Tall to cover diagonal sweep */
+    -fx-rotate: 35;
+    -fx-mouse-transparent: true;
 }

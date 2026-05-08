@@ -22,8 +22,8 @@ public class SightingService {
         String sql = """
             INSERT INTO sightings
               (location_id, reported_by, sighted_at, elephant_count,
-               herd_size, behaviour, notes, verified)
-            VALUES (?,?,?,?,?,?,?,?)""";
+               herd_size, behaviour, notes, caption, image_path, is_danger, is_visible, verified)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""";
         try (PreparedStatement ps = conn().prepareStatement(sql,
                 Statement.RETURN_GENERATED_KEYS)) {
             ps.setObject(1, s.getLocation()    != null ? s.getLocation().getId()    : null);
@@ -33,7 +33,11 @@ public class SightingService {
             ps.setString(5, s.getHerdSize()   != null ? s.getHerdSize().name()   : null);
             ps.setString(6, s.getBehaviour()  != null ? s.getBehaviour().name()  : null);
             ps.setString(7, s.getNotes());
-            ps.setBoolean(8, s.isVerified());
+            ps.setString(8, s.getCaption());
+            ps.setString(9, s.getImagePath());
+            ps.setBoolean(10, s.isDanger());
+            ps.setBoolean(11, s.isVisible());
+            ps.setBoolean(12, s.isVerified());
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) s.setId(keys.getInt(1));
@@ -78,6 +82,50 @@ public class SightingService {
         }
     }
 
+    public List<ElephantSighting> findRecentDangerSightings(LocalDateTime since) {
+        List<ElephantSighting> list = new ArrayList<>();
+        String sql = """
+            SELECT s.*, l.name loc_name, l.district, l.latitude, l.longitude,
+                   u.full_name reporter_name
+            FROM sightings s
+            LEFT JOIN locations l ON l.id = s.location_id
+            LEFT JOIN users u     ON u.id = s.reported_by
+            WHERE s.is_danger = 1 AND s.is_visible = 1 AND s.sighted_at > ?
+            ORDER BY s.sighted_at DESC""";
+        try (PreparedStatement ps = conn().prepareStatement(sql)) {
+            ps.setTimestamp(1, Timestamp.valueOf(since));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            LOG.severe("Error fetching recent danger sightings: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public boolean delete(int sightingId) {
+        try (PreparedStatement ps = conn().prepareStatement(
+                "UPDATE sightings SET is_visible=0 WHERE id=?")) {
+            ps.setInt(1, sightingId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            LOG.severe("Take down sighting error: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean updateDanger(int sightingId, boolean isDanger) {
+        try (PreparedStatement ps = conn().prepareStatement(
+                "UPDATE sightings SET is_danger=? WHERE id=?")) {
+            ps.setBoolean(1, isDanger);
+            ps.setInt(2, sightingId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            LOG.severe("Update danger status error: " + e.getMessage());
+            return false;
+        }
+    }
+
     // ── Row Mapper ────────────────────────────────────────────────────────────
 
     private ElephantSighting mapRow(ResultSet rs) throws SQLException {
@@ -104,6 +152,10 @@ public class SightingService {
         String bh = rs.getString("behaviour");
         if (bh != null) s.setBehaviour(ElephantSighting.Behaviour.valueOf(bh));
         s.setNotes(rs.getString("notes"));
+        s.setCaption(rs.getString("caption"));
+        s.setImagePath(rs.getString("image_path"));
+        s.setDanger(rs.getBoolean("is_danger"));
+        s.setVisible(rs.getBoolean("is_visible"));
         s.setVerified(rs.getBoolean("verified"));
         return s;
     }

@@ -78,6 +78,10 @@ public class DatabaseManager {
                     password_hash VARCHAR(255) NOT NULL,
                     email         VARCHAR(255) UNIQUE NOT NULL,
                     full_name     VARCHAR(255),
+                    home_location_id INT REFERENCES locations(id),
+                    home_lat      DOUBLE,
+                    home_lon      DOUBLE,
+                    notification_radius DOUBLE DEFAULT 20.0,
                     role          VARCHAR(50) NOT NULL DEFAULT 'VIEWER',
                     active        BOOLEAN NOT NULL DEFAULT TRUE,
                     is_verified   BOOLEAN NOT NULL DEFAULT FALSE,
@@ -85,6 +89,11 @@ public class DatabaseManager {
                     otp_expiry    DATETIME,
                     created_at    DATETIME NOT NULL
                 )""");
+
+            // Migration: Ensure user location columns exist for analytics and proximity alerts
+            addColumnIfMissing(st, "users", "home_lat", "DOUBLE");
+            addColumnIfMissing(st, "users", "home_lon", "DOUBLE");
+            addColumnIfMissing(st, "users", "notification_radius", "DOUBLE DEFAULT 20.0");
 
             st.executeUpdate("""
                 CREATE TABLE IF NOT EXISTS locations (
@@ -106,8 +115,18 @@ public class DatabaseManager {
                     herd_size       VARCHAR(50),
                     behaviour       VARCHAR(50),
                     notes           TEXT,
+                    caption         TEXT,
+                    image_path      TEXT,
+                    is_danger       BOOLEAN NOT NULL DEFAULT FALSE,
+                    is_visible      BOOLEAN NOT NULL DEFAULT TRUE,
                     verified        BOOLEAN NOT NULL DEFAULT FALSE
                 )""");
+
+            // Migration: Ensure social columns exist for feed functionality
+            addColumnIfMissing(st, "sightings", "caption",    "TEXT");
+            addColumnIfMissing(st, "sightings", "image_path", "TEXT");
+            addColumnIfMissing(st, "sightings", "is_danger",  "BOOLEAN NOT NULL DEFAULT FALSE");
+            addColumnIfMissing(st, "sightings", "is_visible", "BOOLEAN NOT NULL DEFAULT TRUE");
 
             st.executeUpdate("""
                 CREATE TABLE IF NOT EXISTS predictions (
@@ -156,45 +175,62 @@ public class DatabaseManager {
                 if (!"ADMINISTRATOR".equalsIgnoreCase(currentRole)) {
                     connection.createStatement().executeUpdate("UPDATE users SET role='ADMINISTRATOR', active=1, is_verified=1 WHERE username='admin'");
                 }
-                return;
             }
         }
 
+        // Seed Users if empty
+        if (isTableEmpty("users")) {
         // Passwords are BCrypt hashes of "password123"
         String hash = "$2a$10$Nf5oXvjV7R.R9NEoZU8RXO7OqVCB2e7bF0n3vLnBUMTlf/WiC5Ehu"; // BCrypt hash of "password123"
 
         try (PreparedStatement ps = connection.prepareStatement(
-            "INSERT INTO users(username,password_hash,email,full_name,role,active,is_verified,otp_code,otp_expiry,created_at) VALUES(?,?,?,?,?,?,?,?,?,?)")) {
+            "INSERT INTO users(username,password_hash,email,full_name,role,active,is_verified,otp_code,otp_expiry,created_at,home_lat,home_lon,notification_radius) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
 
             Object[][] users = {
-                {"admin",  hash, "admin@pawura.lk",  "Kasun Perera",    "ADMINISTRATOR", true, true, null, null, "2024-01-01 00:00:00"},
-                {"ranger1",hash, "r1@pawura.lk",     "Amaya Silva",     "RANGER",        true, true, null, null, "2024-01-02 00:00:00"},
-                {"viewer1",hash, "v1@pawura.lk",     "Nuwan Fernando",  "VIEWER",        true, true, null, null, "2024-01-03 00:00:00"},
-                {"demo",   hash, "demo@pawura.lk",    "Demo User",       "VIEWER",        true, true, null, null, "2024-11-20 00:00:00"},
+                {"admin",  hash, "admin@pawura.lk",  "Kasun Perera",    "ADMINISTRATOR", true, true, null, null, "2024-01-01 00:00:00", 6.9271, 79.8612, 20.0},
+                {"ranger1",hash, "r1@pawura.lk",     "Amaya Silva",     "RANGER",        true, true, null, null, "2024-01-02 00:00:00", 7.9400, 81.0000, 15.0},
+                {"viewer1",hash, "v1@pawura.lk",     "Nuwan Fernando",  "VIEWER",        true, true, null, null, "2024-01-03 00:00:00", 6.0000, 80.2000, 25.0},
+                {"demo",   hash, "demo@pawura.lk",    "Demo User",       "VIEWER",        true, true, null, null, "2024-11-20 00:00:00", 7.0000, 80.0000, 20.0},
             };
             for (Object[] u : users) {
                 for (int i = 0; i < u.length; i++) ps.setObject(i + 1, u[i]);
                 ps.executeUpdate();
             }
         }
+        }
 
+        // Seed Locations if empty
+        if (isTableEmpty("locations")) {
         try (PreparedStatement ps = connection.prepareStatement(
             "INSERT INTO locations(name,district,latitude,longitude) VALUES(?,?,?,?)")) {
 
             Object[][] locs = {
-                {"Minneriya Tank",      "Polonnaruwa",  8.0312, 80.9010},
-                {"Kaudulla NP",         "Trincomalee",  8.1667, 80.9167},
-                {"Udawalawe NP",        "Monaragala",   6.4754, 80.8868},
-                {"Wasgamuwa NP",        "Matale",       7.7236, 80.8656},
-                {"Yala NP",             "Hambantota",   6.3729, 81.5218},
-                {"Lunugamvehera NP",    "Hambantota",   6.2947, 81.2669},
+                {"Minneriya Tank",      "Polonnaruwa",   8.0312, 80.9010},
+                {"Kaudulla NP",         "Trincomalee",   8.1667, 80.9167},
+                {"Udawalawe NP",        "Monaragala",    6.4754, 80.8868},
+                {"Wasgamuwa NP",        "Matale",        7.7236, 80.8656},
+                {"Yala NP",             "Hambantota",    6.3729, 81.5218},
+                {"Lunugamvehera NP",    "Hambantota",    6.2947, 81.2669},
+                {"Bundala NP",          "Hambantota",    6.1667, 81.1667},
+                {"Wilpattu NP",         "Anuradhapura",  8.4333, 80.0000},
+                {"Kumana NP",           "Ampara",        6.5167, 81.6667},
+                {"Maduru Oya NP",       "Ampara",        7.6500, 81.2000},
+                {"Gal Oya NP",          "Ampara",        7.2167, 81.4667},
+                {"Horton Plains NP",    "Nuwara Eliya",  6.8000, 80.8000},
+                {"Lahugala Kitulana NP", "Ampara",        6.8667, 81.7167},
+                {"Somawathiya NP",      "Polonnaruwa",   8.2167, 81.1667},
+                {"Galway's Land NP",    "Nuwara Eliya",  6.9691, 80.7836},
+                {"Maduru Oya NP",       "Polonnaruwa",   7.6472, 81.2111}
             };
             for (Object[] l : locs) {
                 for (int i = 0; i < l.length; i++) ps.setObject(i + 1, l[i]);
                 ps.executeUpdate();
             }
         }
+        }
 
+        // Seed Sightings if empty
+        if (isTableEmpty("sightings")) {
         try (PreparedStatement ps = connection.prepareStatement(
             "INSERT INTO sightings(location_id,reported_by,sighted_at,elephant_count,herd_size,behaviour,notes,verified) VALUES(?,?,?,?,?,?,?,?)")) {
 
@@ -209,7 +245,10 @@ public class DatabaseManager {
                 ps.executeUpdate();
             }
         }
+        }
 
+        // Seed News if empty
+        if (isTableEmpty("news_articles")) {
         try (PreparedStatement ps = connection.prepareStatement(
             "INSERT INTO news_articles(title,content,author,source,category,published_at) VALUES(?,?,?,?,?,?)")) {
 
@@ -229,7 +268,23 @@ public class DatabaseManager {
                 ps.executeUpdate();
             }
         }
+        }
 
         LOG.info("Database seeded with demo data.");
+    }
+
+    private void addColumnIfMissing(Statement st, String table, String col, String type) {
+        try {
+            st.executeUpdate("ALTER TABLE " + table + " ADD COLUMN " + col + " " + type);
+        } catch (SQLException e) {
+            // Column likely already exists, safe to ignore
+        }
+    }
+
+    private boolean isTableEmpty(String tableName) throws SQLException {
+        try (Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM " + tableName)) {
+            return rs.next() && rs.getInt(1) == 0;
+        }
     }
 }

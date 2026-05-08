@@ -4,6 +4,8 @@ import com.pawura.core.AbstractDataStore;
 import com.pawura.model.ActivityLog;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +40,21 @@ public class ActivityLogStore extends AbstractDataStore<ActivityLog, Integer> {
             log.severe("Error fetching activity logs: " + e.getMessage());
         }
         return logs;
+    }
+
+    public Map<Integer, Integer> getActivityByHour() {
+        Map<Integer, Integer> stats = new LinkedHashMap<>();
+        // Grouping by hour to find peak usage
+        String sql = "SELECT HOUR(created_at) as hr, COUNT(*) as count FROM activity_logs GROUP BY hr ORDER BY hr ASC";
+        try (Statement st = getConnection().createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                stats.put(rs.getInt("hr"), rs.getInt("count"));
+            }
+        } catch (SQLException e) {
+            log.severe("Error fetching activity peak stats: " + e.getMessage());
+        }
+        return stats;
     }
 
     private ActivityLog mapRow(ResultSet rs) throws SQLException {

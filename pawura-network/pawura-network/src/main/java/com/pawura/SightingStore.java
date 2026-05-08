@@ -3,6 +3,8 @@ package com.pawura;
 import com.pawura.core.AbstractDataStore;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,6 +52,20 @@ public class SightingStore extends AbstractDataStore<Sighting, Integer> {
             if (rs.next()) return rs.getLong(1);
         } catch (SQLException ignored) {}
         return 0;
+    }
+
+    public Map<String, Integer> getSightingTrends() {
+        Map<String, Integer> stats = new LinkedHashMap<>();
+        String sql = "SELECT DATE(sighted_at) as s_date, COUNT(*) as count FROM sightings GROUP BY s_date ORDER BY s_date ASC";
+        try (Statement st = getConnection().createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                stats.put(rs.getString("s_date"), rs.getInt("count"));
+            }
+        } catch (SQLException e) {
+            log.severe("Error fetching sighting trends: " + e.getMessage());
+        }
+        return stats;
     }
 
     private Sighting mapRow(ResultSet rs) throws SQLException {
