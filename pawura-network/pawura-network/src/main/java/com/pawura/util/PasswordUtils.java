@@ -1,5 +1,6 @@
 package com.pawura.util;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -7,12 +8,6 @@ import java.util.Base64;
 
 /**
  * PasswordUtils – utilities for hashing and verifying passwords.
- *
- * NOTE: For real BCrypt usage add the at.favre.lib:bcrypt dependency.
- * This implementation provides a SHA-256 + salt fallback so the project
- * compiles without the BCrypt library on the class-path.
- *
- * The demo seed data uses a placeholder hash that always matches "password123".
  */
 public final class PasswordUtils {
 
@@ -28,13 +23,9 @@ public final class PasswordUtils {
      */
     public static String hash(String plainPassword) {
         try {
-            Class<?> bcrypt = Class.forName("at.favre.lib.crypto.bcrypt.BCrypt");
-            Object hasher   = bcrypt.getMethod("withDefaults").invoke(null);
-            return (String) hasher.getClass()
-                .getMethod("hashToString", int.class, char[].class)
-                .invoke(hasher, 12, plainPassword.toCharArray());
-        } catch (Exception ignored) {
-            // BCrypt not on classpath – use SHA-256 + salt
+            return BCrypt.withDefaults().hashToString(12, plainPassword.toCharArray());
+        } catch (Throwable t) {
+            // Fallback to SHA-256 if library is missing
             return sha256Hash(plainPassword);
         }
     }
@@ -46,23 +37,33 @@ public final class PasswordUtils {
         // Support demo seed data
         if (storedHash.equals(DEMO_HASH)) return plainPassword.equals(DEMO_PASSWORD);
         try {
-            Class<?> bcrypt   = Class.forName("at.favre.lib.crypto.bcrypt.BCrypt");
-            Object   verifier = bcrypt.getMethod("verifyer").invoke(null);
-            Object   result   = verifier.getClass()
-                .getMethod("verify", char[].class, String.class)
-                .invoke(verifier, plainPassword.toCharArray(), storedHash);
-            return (boolean) result.getClass().getMethod("verified").invoke(result);
-        } catch (Exception ignored) {
-            return storedHash.equals(sha256Hash(plainPassword));
+            BCrypt.Result result = BCrypt.verifyer().verify(plainPassword.toCharArray(), storedHash);
+            return result.verified;
+        } catch (Throwable t) {
+            if (storedHash == null || !storedHash.startsWith("SHA256:")) return false;
+            
+            // Fallback verification: extract salt from the stored string
+            try {
+                String[] parts = storedHash.split(":");
+                if (parts.length < 3) return false;
+                byte[] salt = Base64.getDecoder().decode(parts[1]);
+                return storedHash.equals(sha256HashWithSalt(plainPassword, salt));
+            } catch (Exception e) {
+                return false;
+            }
         }
     }
 
     // ── SHA-256 fallback ──────────────────────────────────────────────────────
     private static String sha256Hash(String password) {
+        SecureRandom rng = new SecureRandom();
+        byte[] salt = new byte[16];
+        rng.nextBytes(salt);
+        return sha256HashWithSalt(password, salt);
+    }
+
+    private static String sha256HashWithSalt(String password, byte[] salt) {
         try {
-            SecureRandom  rng  = new SecureRandom();
-            byte[]        salt = new byte[16];
-            rng.nextBytes(salt);
             MessageDigest md   = MessageDigest.getInstance("SHA-256");
             md.update(salt);
             byte[] hash = md.digest(password.getBytes());

@@ -16,8 +16,14 @@ public class User {
     private String        passwordHash;   // BCrypt hash – never the raw password
     private String        email;
     private String        fullName;
+    private double        homeLat;
+    private double        homeLon;
+    private double        notificationRadius = 20.0;
     private Role          role;
     private LocalDateTime createdAt;
+    private boolean       isVerified;
+    private String        otpCode;
+    private LocalDateTime otpExpiry;
     private boolean       active;
 
     // ── Constructors ──────────────────────────────────────────────────────────
@@ -53,7 +59,7 @@ public class User {
 
     public String getEmail()                  { return email; }
     public void setEmail(String email) {
-        if (email != null && !email.contains("@"))
+        if (email == null || !email.contains("@"))
             throw new IllegalArgumentException("Invalid email address.");
         this.email = email;
     }
@@ -61,11 +67,33 @@ public class User {
     public String getFullName()               { return fullName; }
     public void setFullName(String fullName)  { this.fullName = fullName; }
 
+    public Location getHomeLocation() {
+        return new Location(homeLat, homeLon, "Home", "User Defined");
+    }
+
+    public double getHomeLat() { return homeLat; }
+    public void setHomeLat(double homeLat) { this.homeLat = homeLat; }
+
+    public double getHomeLon() { return homeLon; }
+    public void setHomeLon(double homeLon) { this.homeLon = homeLon; }
+
+    public double getNotificationRadius() { return notificationRadius; }
+    public void setNotificationRadius(double radius) { this.notificationRadius = radius; }
+
     public Role getRole()                     { return role; }
     public void setRole(Role role)            { this.role = role; }
 
     public LocalDateTime getCreatedAt()       { return createdAt; }
     public void setCreatedAt(LocalDateTime d) { this.createdAt = d; }
+
+    public boolean isVerified()               { return isVerified; }
+    public void setVerified(boolean verified) { this.isVerified = verified; }
+
+    public String getOtpCode()                { return otpCode; }
+    public void setOtpCode(String otpCode)    { this.otpCode = otpCode; }
+
+    public LocalDateTime getOtpExpiry()       { return otpExpiry; }
+    public void setOtpExpiry(LocalDateTime d) { this.otpExpiry = d; }
 
     public boolean isActive()                 { return active; }
     public void setActive(boolean active)     { this.active = active; }

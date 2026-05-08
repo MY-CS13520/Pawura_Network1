@@ -29,7 +29,7 @@ public class NewsService {
             ps.setString(3, a.getAuthor());
             ps.setString(4, a.getSource());
             ps.setString(5, a.getCategory() != null ? a.getCategory().name() : null);
-            ps.setString(6, a.getPublishedAt().toString());
+            ps.setTimestamp(6, Timestamp.valueOf(a.getPublishedAt()));
             ps.setString(7, a.getImageUrl());
             ps.executeUpdate();
             try (ResultSet k = ps.getGeneratedKeys()) {
@@ -98,8 +98,8 @@ public class NewsService {
             try { a.setCategory(NewsArticle.Category.valueOf(cat)); }
             catch (IllegalArgumentException ignored) {}
         }
-        String pub = rs.getString("published_at");
-        if (pub != null) a.setPublishedAt(LocalDateTime.parse(pub));
+        Timestamp pub = rs.getTimestamp("published_at");
+        if (pub != null) a.setPublishedAt(pub.toLocalDateTime());
         a.setImageUrl(rs.getString("image_url"));
         return a;
     }

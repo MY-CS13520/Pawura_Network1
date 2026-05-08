@@ -25,10 +25,17 @@ public class ElephantSighting implements Displayable {
     private HerdSize      herdSize;
     private Behaviour     behaviour;
     private String        notes;
+    private String        caption;
+    private String        imagePath;
+    private boolean       isDanger;
+    private boolean       isVisible;
     private boolean       verified;
 
     // ── Constructors ──────────────────────────────────────────────────────────
-    public ElephantSighting() { this.sightedAt = LocalDateTime.now(); }
+    public ElephantSighting() { 
+        this.sightedAt = LocalDateTime.now(); 
+        this.isVisible = true;
+    }
 
     public ElephantSighting(Location location, User reportedBy,
                              int count, HerdSize herdSize, Behaviour behaviour) {
@@ -57,6 +64,8 @@ public class ElephantSighting implements Displayable {
             Date / Time   : %s
             Elephant Count: %d
             Herd Size     : %s
+            Caption       : %s
+            Danger Alert  : %s
             Behaviour     : %s
             Reported By   : %s
             Verified      : %s
@@ -68,6 +77,8 @@ public class ElephantSighting implements Displayable {
             sightedAt.format(FMT),
             elephantCount,
             herdSize,
+            caption != null ? caption : "—",
+            isDanger ? "⚠ HIGH DANGER" : "Normal",
             behaviour,
             reportedBy != null ? reportedBy.getFullName() : "—",
             verified ? "✔ Yes" : "✘ Pending",
@@ -91,6 +102,14 @@ public class ElephantSighting implements Displayable {
     public void          setBehaviour(Behaviour b)       { this.behaviour = b; }
     public String        getNotes()                      { return notes; }
     public void          setNotes(String notes)          { this.notes = notes; }
+    public String        getCaption()                    { return caption; }
+    public void          setCaption(String caption)      { this.caption = caption; }
+    public String        getImagePath()                  { return imagePath; }
+    public void          setImagePath(String path)       { this.imagePath = path; }
+    public boolean       isDanger()                      { return isDanger; }
+    public void          setDanger(boolean danger)       { this.isDanger = danger; }
+    public boolean       isVisible()                     { return isVisible; }
+    public void          setVisible(boolean visible)     { this.isVisible = visible; }
     public boolean       isVerified()                    { return verified; }
     public void          setVerified(boolean verified)   { this.verified = verified; }
 }
